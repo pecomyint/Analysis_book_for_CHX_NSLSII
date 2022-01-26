@@ -184,13 +184,13 @@ def plot_a_detector_image(n, color_min=0.01, color_max=0, crop = (None,None,None
             uid
         except NameError:
             print("well, uid WASN'T defined! saving in primary folder")
-            fp = '/home/pmyint/'+ manual_name +'Detector_image_' + np.str(n[0])  + '_to_' + np.str(n[-1]) + '_'+ now + '.pdf'
+            fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+ manual_name +'Detector_image_' + np.str(n[0])  + '_to_' + np.str(n[-1]) + '_'+ now + '.pdf'
         else:
             print("uid was defined. Saving in respective folder")
-            directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+            directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
             if directory_exists == False:
-                os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
-            fp = '/home/pmyint/' + '%s_'%(uid) +'/' +'Detector_image_' + np.str(n[0])  + '_to_' + np.str(n[-1]) + '_'+ now + '.pdf'
+                os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
+            fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' +'Detector_image_' + np.str(n[0])  + '_to_' + np.str(n[-1]) + '_'+ now + '.pdf'
         
         plt.savefig(fp,bbox_inches='tight', format='eps', dpi=50) # 
     plt.show()
@@ -267,7 +267,7 @@ def plot_intensity_for_pixel_box(Is):
     plt.legend(loc='best')
     plt.show()
 
-def plot_intensity_adv_for_pixel_box(Is,yslicestart,ysliceend,xslicestart,xsliceend,startframe,endframe):
+def plot_intensity_adv_for_pixel_box(Is,yslicestart,ysliceend,xslicestart,xsliceend,startframe,endframe,ylimmin,ylimmax):
     """
     same as plot_intensity_for_pixel_box but can label things and save the output plot 
     plots the intensity that is given, plots the fitted function, save the image to the folder
@@ -277,6 +277,7 @@ def plot_intensity_adv_for_pixel_box(Is,yslicestart,ysliceend,xslicestart,xslice
     plt.ylabel('Intensity [A.U.]')
     plt.xlabel('Time [s]')
     plt.legend(loc='best')
+    plt.ylim(ylimmin, ylimmax)
     plt.suptitle(' \n yslicestart = {0}'.format(yslicestart) + 
                  ' \n ysliceend = {0}'.format(ysliceend) + 
                  ' \n xslicestart = {0}'.format(xslicestart) + 
@@ -354,13 +355,13 @@ def read_and_plot_fit_intensity_along_q_parallel(yslicestart,ysliceend,xslicesta
         Is = get_intensity_for_pixel_box(yslicestart,ysliceend,i,i+delx,startframe,endframe)
         plot_intensity_andfit_for_pixel_box(Is,yslicestart,ysliceend,i,i+delx,startframe,endframe,fitsign)
 
-def read_and_plot_intensity_along_q_parallel(yslicestart,ysliceend,xslicestart,xsliceend,delx,startframe,endframe):
+def read_and_plot_intensity_along_q_parallel(yslicestart,ysliceend,xslicestart,xsliceend,delx,startframe,endframe,ylimmin,ylimmax):
     loop = np.arange(xslicestart,xsliceend,delx)
     Rs = np.zeros((len(loop),2))
     pos = 0
     for i in tqdm(loop):
         Is = get_intensity_for_pixel_box(yslicestart,ysliceend,i,i+delx,startframe,endframe)
-        plot_intensity_adv_for_pixel_box(Is,yslicestart,ysliceend,i,i+delx,startframe,endframe)
+        plot_intensity_adv_for_pixel_box(Is,yslicestart,ysliceend,i,i+delx,startframe,endframe,ylimmin,ylimmax)
     
 ############################################################################################################
 ########   xxxxxxxxxxxxxxxxxx I Vs t retriving codes  END    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ############
@@ -403,7 +404,7 @@ def read_and_get_R_along_q_parallel(yslicestart,ysliceend,xslicestart,xsliceend,
             df = df.interpolate(method='linear', limit_direction='forward', limit = 15, axis=1) #along x
             df = df.interpolate(method='linear', limit_direction='backward', axis=0) #along y
             df = df.replace(np.nan,0)
-            img = df.as_matrix()
+            img = df.values
         
         
         for j in range(len(loop)):
@@ -476,11 +477,11 @@ def read_and_get_R_along_q_parallel(yslicestart,ysliceend,xslicestart,xsliceend,
     Rs[6,3] = endframe
     Rs[7,3] = interpolate*1
     
-    directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+    directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
     ion_angle = md['ion angle'].replace(' ', '_')
     name = md['sample'] +'_'+ ion_angle +'_' + md['gas'] + '_'+'Energy'+  md['beam voltage']  +'_%s_'%(uid)
     if directory_exists == False:
-        os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
+        os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
     
     
     from datetime import datetime
@@ -494,7 +495,7 @@ def read_and_get_R_along_q_parallel(yslicestart,ysliceend,xslicestart,xsliceend,
     index = now.index('.')
     now = now[:index]
     
-    fp = '/home/pmyint/' + '%s_'%(uid) +'/' + name
+    fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + name
     np.save(fp + '_Rs_' + now, Rs)
     np.save(fp + '_Is_' + now, Is)
     np.save(fp + '_qs_' + now, qs)
@@ -540,7 +541,7 @@ def read_and_get_R_along_q_parallel_chi_optimized(yslicestart,ysliceend,xslicest
             df = df.interpolate(method='linear', limit_direction='forward', limit = 15, axis=1) #along x
             df = df.interpolate(method='linear', limit_direction='backward', axis=0) #along y
             df = df.replace(np.nan,0)
-            img = df.as_matrix()
+            img = df.values
         
         
         for j in range(len(loop)):
@@ -581,12 +582,12 @@ def read_and_get_R_along_q_parallel_chi_optimized(yslicestart,ysliceend,xslicest
     index = now.index('.')
     now = now[:index]
     
-    directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+    directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
     ion_angle = md['ion angle'].replace(' ', '_')
     name = md['sample'] +'_'+ ion_angle +'_' + md['gas'] + '_'+'Energy'+  md['beam voltage']  +'_%s_'%(uid)
     if directory_exists == False:
-        os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
-    fp = '/home/pmyint/' + '%s_'%(uid) +'/' + name
+        os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
+    fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + name
     np.save(fp + '_Chi_optimized_Rs_' + now, Rs)
     np.save(fp + '_Chi_optimized_Is_' + now, Is)
     np.save(fp + '_Chi_optimized_qs_' + now, qs_new)
@@ -818,15 +819,15 @@ def plotRs(Rs, manual_name=''):#,yslicestart,ysliceend,xslicestart,xsliceend,del
         uid
     except NameError:
         print("well, uid WASN'T defined! saving in primary folder")
-        fp = '/home/pmyint/'+ manual_name +'_Rs_extracted_at_qz_'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3)) + '_' + now + '.pdf'
+        fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+ manual_name +'_Rs_extracted_at_qz_'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3)) + '_' + now + '.pdf'
     else:
         print("uid was defined. Saving in respective folder")
-        directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+        directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
         if directory_exists == False:
-            os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
+            os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
         ion_angle = md['ion angle'].replace(' ', '_')
         name = md['sample'] +'_'+ ion_angle +'_' + md['gas'] + '_'+'Energy'+  md['beam voltage']  +'_%s_'%(uid)
-        fp = '/home/pmyint/' + '%s_'%(uid) +'/' + name +'_Rs_extracted_at_qz_'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3)) + '_' + now + '.pdf'
+        fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + name +'_Rs_extracted_at_qz_'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3)) + '_' + now + '.pdf'
     
     plt.savefig(fp,bbox_inches='tight')
     plt.show()
@@ -924,15 +925,15 @@ def plot_intensity_for_all_pixel_box(Rs, Is, qs,separation=1,manual_name = '', s
         uid
     except NameError:
         print("well, uid WASN'T defined! saving in primary folder")
-        fp = '/home/pmyint/'+ manual_name +'_Is_extracted'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3))+ '_' + now  + '.pdf'
+        fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+ manual_name +'_Is_extracted'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3))+ '_' + now  + '.pdf'
     else:
         print("uid was defined. Saving in respective folder")
-        directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+        directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
         if directory_exists == False:
-            os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
+            os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
         ion_angle = md['ion angle'].replace(' ', '_')
         name = md['sample'] +'_'+ ion_angle +'_' + md['gas'] + '_'+'Energy'+  md['beam voltage']  +'_%s_'%(uid)
-        fp = '/home/pmyint/' + '%s_'%(uid) +'/' + name +'_Is_extracted'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3)) + '_' + now + '.pdf'
+        fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + name +'_Is_extracted'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3)) + '_' + now + '.pdf'
     
     
     plt.savefig(fp,bbox_inches='tight')
@@ -1019,15 +1020,15 @@ def fit_intensity_for_all_pixel_box(Rs, Is, qs, params, manual_name = '', separa
         uid
     except NameError:
         print("well, uid WASN'T defined! saving in primary folder")
-        fp = '/home/pmyint/'+ manual_name +'_Is_extracted_fitted'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3))+ '_' + now  + '.pdf'
+        fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+ manual_name +'_Is_extracted_fitted'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3))+ '_' + now  + '.pdf'
     else:
         print("uid was defined. Saving in respective folder")
-        directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+        directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
         if directory_exists == False:
-            os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
+            os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
         ion_angle = md['ion angle'].replace(' ', '_')
         name = md['sample'] +'_'+ ion_angle +'_' + md['gas'] + '_'+'Energy'+  md['beam voltage']  +'_%s_'%(uid)
-        fp = '/home/pmyint/' + '%s_'%(uid) +'/' + name +'_Is_extracted_fitted'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3)) + '_' + now + '.pdf'
+        fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + name +'_Is_extracted_fitted'+ np.str_(np.round(convert_pixel_to_q(xslicestart,yslicestart+(ysliceend-yslicestart)//2)[2],decimals=3)) + '_' + now + '.pdf'
     
     
     plt.savefig(fp)#,bbox_inches='tight')
@@ -1224,7 +1225,7 @@ def read_and_get_sq_q_at_different_t(select_frames = [], startframe = 0 , endfra
                     df = df.interpolate(method='linear', limit_direction='forward', limit = 15, axis=1) #along x
                     df = df.interpolate(method='linear', limit_direction='backward', axis=0) #along y
                     df = df.replace(np.nan,0)
-                    img = df.as_matrix()
+                    img = df.values
                 
                 Zf = sgolay2d( img, window_size=box_size, order=polynomial_order)
                 if isinstance(yslice, list):
@@ -1462,3 +1463,81 @@ def read_and_get_sq_peak_q_at_different_t(select_frames = [], startframe = 0 , e
 ############################################################################################################
 ########   xxxxxxxxxxxxxxxxxxxx plot Sq vs q END   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ############
 ############################################################################################################
+def sgolay2d ( z, window_size, order, derivative=None):
+    """
+    """
+    # number of terms in the polynomial expression
+    n_terms = ( order + 1 ) * ( order + 2)  / 2.0
+
+    if  window_size % 2 == 0:
+        raise ValueError('window_size must be odd')
+
+    if window_size**2 < n_terms:
+        raise ValueError('order is too high for the window size')
+
+    half_size = window_size // 2
+
+    # exponents of the polynomial. 
+    # p(x,y) = a0 + a1*x + a2*y + a3*x^2 + a4*y^2 + a5*x*y + ... 
+    # this line gives a list of two item tuple. Each tuple contains 
+    # the exponents of the k-th term. First element of tuple is for x
+    # second element for y.
+    # Ex. exps = [(0,0), (1,0), (0,1), (2,0), (1,1), (0,2), ...]
+    exps = [ (k-n, n) for k in range(order+1) for n in range(k+1) ]
+
+    # coordinates of points
+    ind = np.arange(-half_size, half_size+1, dtype=np.float64)
+    dx = np.repeat( ind, window_size )
+    dy = np.tile( ind, [window_size, 1]).reshape(window_size**2, )
+
+    # build matrix of system of equation
+    A = np.empty( (window_size**2, len(exps)) )
+    for i, exp in enumerate( exps ):
+        A[:,i] = (dx**exp[0]) * (dy**exp[1])
+
+    # pad input array with appropriate values at the four borders
+    new_shape = z.shape[0] + 2*half_size, z.shape[1] + 2*half_size
+    Z = np.zeros( (new_shape) )
+    # top band
+    band = z[0, :]
+    Z[:half_size, half_size:-half_size] =  band -  np.abs( np.flipud( z[1:half_size+1, :] ) - band )
+    # bottom band
+    band = z[-1, :]
+    Z[-half_size:, half_size:-half_size] = band  + np.abs( np.flipud( z[-half_size-1:-1, :] )  -band )
+    # left band
+    band = np.tile( z[:,0].reshape(-1,1), [1,half_size])
+    Z[half_size:-half_size, :half_size] = band - np.abs( np.fliplr( z[:, 1:half_size+1] ) - band )
+    # right band
+    band = np.tile( z[:,-1].reshape(-1,1), [1,half_size] )
+    Z[half_size:-half_size, -half_size:] =  band + np.abs( np.fliplr( z[:, -half_size-1:-1] ) - band )
+    # central band
+    Z[half_size:-half_size, half_size:-half_size] = z
+
+    # top left corner
+    band = z[0,0]
+    Z[:half_size,:half_size] = band - np.abs( np.flipud(np.fliplr(z[1:half_size+1,1:half_size+1]) ) - band )
+    # bottom right corner
+    band = z[-1,-1]
+    Z[-half_size:,-half_size:] = band + np.abs( np.flipud(np.fliplr(z[-half_size-1:-1,-half_size-1:-1]) ) - band )
+
+    # top right corner
+    band = Z[half_size,-half_size:]
+    Z[:half_size,-half_size:] = band - np.abs( np.flipud(Z[half_size+1:2*half_size+1,-half_size:]) - band )
+    # bottom left corner
+    band = Z[-half_size:,half_size].reshape(-1,1)
+    Z[-half_size:,:half_size] = band - np.abs( np.fliplr(Z[-half_size:, half_size+1:2*half_size+1]) - band )
+
+    # solve system and convolve
+    if derivative == None:
+        m = np.linalg.pinv(A)[0].reshape((window_size, -1))
+        return scipy.signal.fftconvolve(Z, m, mode='valid')
+    elif derivative == 'col':
+        c = np.linalg.pinv(A)[1].reshape((window_size, -1))
+        return scipy.signal.fftconvolve(Z, -c, mode='valid')
+    elif derivative == 'row':
+        r = np.linalg.pinv(A)[2].reshape((window_size, -1))
+        return scipy.signal.fftconvolve(Z, -r, mode='valid')
+    elif derivative == 'both':
+        c = np.linalg.pinv(A)[1].reshape((window_size, -1))
+        r = np.linalg.pinv(A)[2].reshape((window_size, -1))
+        return scipy.signal.fftconvolve(Z, -r, mode='valid'), scipy.signal.fftconvolve(Z, -c, mode='valid')

@@ -468,13 +468,13 @@ def plot_exponents(exponents, manual_name = '', save = 0):
             uid
         except NameError:
             print("well, uid WASN'T defined! saving in primary folder")
-            fp = '/home/pmyint/'+ manual_name + np.str_(np.round(convert_pixel_to_q(centerxstart, centery)[7],decimals=3))+'_'+ now 
+            fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+ manual_name + np.str_(np.round(convert_pixel_to_q(centerxstart, centery)[7],decimals=3))+'_'+ now 
         else:
             print("uid was defined. Saving in respective folder")
-            directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+            directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
             if directory_exists == False:
-                os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
-            fp = '/home/pmyint/' + '%s_'%(uid) +'/'+ uid +  np.str_(np.round(convert_pixel_to_q(centerxstart, centery)[7],decimals=3))+'_'+  now 
+                os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
+            fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/'+ uid +  np.str_(np.round(convert_pixel_to_q(centerxstart, centery)[7],decimals=3))+'_'+  now 
 
 
     plt.figure()
@@ -726,7 +726,7 @@ def collect_normalize(startframe,endframe, centerx_start, centerx_end, centery,p
                 df = df.interpolate(method='linear', limit_direction='forward', limit = 15, axis=1) #along x
                 df = df.interpolate(method='linear', limit_direction='backward', axis=0) #along y
                 df = df.replace(np.nan,0)
-                img = df.as_matrix()
+                img = df.values
             temp_img += img
         norm_avg = temp_img/noframes
 
@@ -799,7 +799,7 @@ def collect_normalize(startframe,endframe, centerx_start, centerx_end, centery,p
             df = df.interpolate(method='linear', limit_direction='forward', limit = 15, axis=1) #along x
             df = df.interpolate(method='linear', limit_direction='backward', axis=0) #along y
             df = df.replace(np.nan,0)
-            image = df.as_matrix()
+            image = df.values
 
         #setup mask for ccorr
         ii=0*image
@@ -965,9 +965,9 @@ def collect_normalize(startframe,endframe, centerx_start, centerx_end, centery,p
         
         #Work on the spline fit so that in dynamical ROI, we can move subpixel resolution    
         if discrete_rel_pos == False:
-            if dynamical_ROI_relative_positions == np.zeros(10):
+            if dynamical_ROI_relative_positions != np.zeros(10):
                 from scipy import interpolate as sci_interpolate
-                img_shape = md['img_shape']
+                img_shape = np.shape(image)
                 x = np.arange(0, img_shape[1], 1)
                 y = np.arange(0, img_shape[0], 1)
                 xx, yy = np.meshgrid(x, y)
@@ -1062,15 +1062,15 @@ def collect_normalize(startframe,endframe, centerx_start, centerx_end, centery,p
         uid
     except NameError:
 #         print("well, uid WASN'T defined! saving in primary folder")
-        fp = '/home/pmyint/'+'Inormalized_all_'+  '_' + now + '.npy'
-        f2 = '/home/pmyint/'+'CenterXs_'+  '_' + now + '.npy'
+        fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+'Inormalized_all_'+  '_' + now + '.npy'
+        f2 = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+'CenterXs_'+  '_' + now + '.npy'
     else:
 #         print("uid was defined. Saving in respective folder")
-        directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/' + np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '/')
+        directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '/')
         if directory_exists == False:
-            os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/' + np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '/')
-        fp = '/home/pmyint/' + '%s_'%(uid) +'/'+ np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '/'+'Inormalized_all_'+ np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '_' + np.str(centerx_start) + '_' + np.str(centerx_end) + '_'  + now + '.npy'
-        fp2 = '/home/pmyint/' + '%s_'%(uid) +'/'+ np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '/'+'CenterXs_'+ np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '_' + np.str(centerx_start) + '_' + np.str(centerx_end) + '_' + now + '.npy'
+            os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '/')
+        fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/'+ np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '/'+'Inormalized_all_'+ np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '_' + np.str(centerx_start) + '_' + np.str(centerx_end) + '_'  + now + '.npy'
+        fp2 = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/'+ np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '/'+'CenterXs_'+ np.str_(np.round(convert_pixel_to_q(centerx_start,centery)[7],decimals=3)) + '_' + np.str(centerx_start) + '_' + np.str(centerx_end) + '_' + now + '.npy'
 
     np.save(fp,np.asarray(Inor_all))
     np.save(fp2,np.asarray(CenterXs))
@@ -1167,13 +1167,13 @@ def TTCF(CenterXs,Inor_all):
             uid
         except NameError:
 #             print("well, uid WASN'T defined! saving in primary folder")
-            fp = '/home/pmyint/'+'TTCF_'+  + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+ now + '.npy'
+            fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+'TTCF_'+  + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+ now + '.npy'
         else:
 #             print("uid was defined. Saving in respective folder")
-            directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/' + np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '/')
+            directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '/')
             if directory_exists == False:
-                os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/' + np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '/')
-            fp = '/home/pmyint/' + '%s_'%(uid) +'/'+ np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '/'+'TTCF_'+ np.str_(np.round(convert_pixel_to_q(centerx,centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '_' + now + '.npy'
+                os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' + np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '/')
+            fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/'+ np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '/'+'TTCF_'+ np.str_(np.round(convert_pixel_to_q(centerx,centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx,centery)[7],decimals=3)) + '_' + now + '.npy'
 
         np.save(fp, TTCF)
         TTCFs.append(TTCF)
@@ -1255,13 +1255,13 @@ def plotTTCF(TTCF,manual_name = '', trim = [], color_min = 1 , color_max = 1.15,
             uid
         except NameError:
             print("well, uid WASN'T defined! saving in primary folder")
-            fp = '/home/pmyint/'+ manual_name +'TTCF_plot_'+ np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+ now + '.pdf'
+            fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+ manual_name +'TTCF_plot_'+ np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+ now + '.pdf'
         else:
             print("uid was defined. Saving in respective folder")
-            directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+            directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
             if directory_exists == False:
-                os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
-            fp = '/home/pmyint/' + '%s_'%(uid) +'/' +'TTCF_plot_'+  np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+  now + '.pdf'
+                os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
+            fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/' +'TTCF_plot_'+  np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+  now + '.pdf'
 
         plt.savefig(fp,bbox_inches='tight')
     plt.show()
@@ -1887,13 +1887,13 @@ def plot_exponents_vs_T(exponents, manual_name = '', beta = 1, tau = 1, n = 1, b
                     uid
                 except NameError:
                     print("well, uid WASN'T defined! saving in primary folder")
-                    fp = '/home/pmyint/'+ manual_name + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+ now 
+                    fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+ manual_name + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+ now 
                 else:
                     print("uid was defined. Saving in respective folder")
-                    directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+                    directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
                     if directory_exists == False:
-                        os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
-                    fp = '/home/pmyint/' + '%s_'%(uid) +'/'+ uid + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+  now 
+                        os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
+                    fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/'+ uid + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+  now 
 
 
             if beta == 1:
@@ -2068,13 +2068,13 @@ def plot_exponents_vs_T(exponents, manual_name = '', beta = 1, tau = 1, n = 1, b
                 uid
             except NameError:
                 print("well, uid WASN'T defined! saving in primary folder")
-                fp = '/home/pmyint/'+ manual_name + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+ now 
+                fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/'+ manual_name + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+ now 
             else:
                 print("uid was defined. Saving in respective folder")
-                directory_exists = os.path.isdir('/home/pmyint/' + '%s_'%(uid) +'/')
+                directory_exists = os.path.isdir('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
                 if directory_exists == False:
-                    os.makedirs('/home/pmyint/' + '%s_'%(uid) +'/')
-                fp = '/home/pmyint/' + '%s_'%(uid) +'/'+ uid + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+  now 
+                    os.makedirs('/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/')
+                fp = '/Users/pmyint/Downloads/TIFF_ALD_99b99be0/Analysis_Peco/' + '%s_'%(uid) +'/'+ uid + np.str_(np.round(convert_pixel_to_q(centerx, centery)[1],decimals=3)) + '_' + np.str_(np.round(convert_pixel_to_q(centerx, centery)[7],decimals=3))+'_'+  now 
 
 
         if beta == 1:
@@ -2512,7 +2512,7 @@ def track_speckle(startY,endY,delY,startX,endX,delX,startframe,endframe, reffram
     print(q_parallel_range)
     
     #plot results beta,px,py,sx,sy
-    time = np.arange(startframe,endframe,bin_frame)*datatakingtime
+    time = np.linspace(startframe,endframe - bin_frame, num =len(res2[j,:,0]-1.0))*datatakingtime
     fig,((ax0,ax1),(ax2,ax3))=plt.subplots(2,2,figsize=(15,8))
     if (endX-startX) < delX*2:
         range_frame = range(1)

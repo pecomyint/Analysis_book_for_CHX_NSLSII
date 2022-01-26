@@ -39,7 +39,7 @@ def insertimg(FD,n,plist,bind,nobind,nobuf,nolev,normalizewith_SG, norm_order, p
         df = df.interpolate(method='linear', limit_direction='forward', limit = 15, axis=1) #along x
         df = df.interpolate(method='linear', limit_direction='backward', axis=0) #along y
         df = df.replace(np.nan,0)
-        img = df.as_matrix()
+        img = df.values
     #interpolate the gaps end -- Peco    
     
     
